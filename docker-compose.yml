@@ -1,0 +1,29 @@
+---
+version: '2'
+services:
+  web:
+    image: nginx:1.19.2
+    container_name: awx_nginx
+    user: root
+    restart: unless-stopped
+    hostname: awxnginx
+    volumes:
+      - "./files/certs/localhost.crt:/tmp/localhost.crt:ro"
+      - "./files/certs/localhost.key:/tmp/localhost.key:ro"
+      - "./files/templates:/etc/nginx/templates"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - awxcompose_default
+    environment:
+      - NGINX_HOST=awx.ocampoge.com
+      - NGINX_IP=192.168.33.90
+      - AWX_WEB=awx_web:8052
+
+volumes:
+  nginx_config:
+
+networks:
+  awxcompose_default:
+    external: true
